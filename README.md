@@ -11,6 +11,7 @@ The repository is organized into three branches, each containing a different imp
 * ```parkinglot/lynx```
 * ```parkinglot/pavan```
 * ```parkinglot/manoj```
+* ```parkinglot/manik```
 
 ## Purpose
 
