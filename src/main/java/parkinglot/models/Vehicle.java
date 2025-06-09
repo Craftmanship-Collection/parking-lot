@@ -48,4 +48,11 @@ public class Vehicle {
     public void setOutTime(Date outTime) {
         this.outTime = outTime;
     }
+
+    @Override
+    public String toString() {
+        return "Vehicle [licenseNo=" + licenseNo + ", vehicleType=" + vehicleType + ", inTime=" + inTime + ", outTime="
+                + outTime + "]";
+    }
+
 }

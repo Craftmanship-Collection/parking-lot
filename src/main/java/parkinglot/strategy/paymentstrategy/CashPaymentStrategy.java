@@ -1,7 +1,5 @@
 package parkinglot.strategy.paymentstrategy;
 
-import java.util.Scanner;
-
 import parkinglot.ParkingLot;
 import parkinglot.enums.PaymentType;
 import parkinglot.models.Token;
@@ -11,13 +9,10 @@ public class CashPaymentStrategy implements PaymentStrategy {
 
     @Override
     public Token completePayment(Vehicle vehicle, Double cost) {
-        // wait for api to respond
-        // try (Scanner sc = new Scanner(System.in)) {
-        // System.out.println("Did the payment done? ");
-        // sc.nextInt();
-        // do some thing for negative issue
+        // do something for negative issue
+        // This comformation should come from the payment api or the Cashier
         ParkingLot.interaction.write("Did the payment done? ");
-        ParkingLot.interaction.readInt();
+        ParkingLot.interaction.read();
 
         Token token = new Token.TokenBuilder()
                 .vehicle(vehicle)
@@ -29,7 +24,7 @@ public class CashPaymentStrategy implements PaymentStrategy {
 
     @Override
     public void printToken(Token token) {
-
+        System.out.println(token);
     }
 
 }

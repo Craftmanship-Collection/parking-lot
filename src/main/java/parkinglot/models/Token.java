@@ -65,4 +65,10 @@ public class Token {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Token [vehicle=" + vehicle + ", cost=" + cost + ", type=" + type + "]";
+	}
+	
+
 }

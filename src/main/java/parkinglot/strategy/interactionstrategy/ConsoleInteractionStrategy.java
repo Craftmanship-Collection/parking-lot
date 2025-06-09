@@ -17,7 +17,8 @@ public class ConsoleInteractionStrategy implements InteractionStrategy {
 
     @Override
     public Integer readInt() {
-        return sc.nextInt();
+        // TODO: handle the other cases
+        return Integer.parseInt(sc.nextLine());
     }
 
     @Override
