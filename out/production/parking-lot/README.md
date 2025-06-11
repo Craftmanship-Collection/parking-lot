@@ -8,3 +8,8 @@ Requirements:
 4.Payment processing with multiple methods.
 
 5.Entry ticket issuance and exit validation
+
+
+
+Class Diagram
+![img.png](img.png)
