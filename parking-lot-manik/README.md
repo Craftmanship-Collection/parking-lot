@@ -1,6 +1,6 @@
-### Parking-Lot
+# Parking-Lot
 
-#### Requirements:
+## Requirements:
 
 1. Vehicles should be charged for parking in parking lot.
 2. Different charges for different types of vehicles:
@@ -18,6 +18,6 @@
     vehicle
 12. For now, only two gates are there. One for Entry and one for exit
 
-#### UML Diagram
+## UML Diagram
 
-[Parking Lot UML diagram](./parking-lot-uml.png)
+![Parking Lot UML diagram](./parking-lot-uml.png)
