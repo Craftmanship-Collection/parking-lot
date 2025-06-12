@@ -5,16 +5,15 @@ import org.junit.jupiter.api.Test;
 import parkinglot.src.FareStrategyPattern.ConcreteStrategies.BasicHourlyRateStrategy;
 import parkinglot.src.FareStrategyPattern.ConcreteStrategies.PremiumRateStrategy;
 import parkinglot.src.ParkingLotController.ParkingLot;
-import parkinglot.src.ParkingSpots.ConcreteParkingSpots.BikeParkingSpot;
-import parkinglot.src.ParkingSpots.ConcreteParkingSpots.CarParkingSpot;
+import parkinglot.src.ParkingLotController.ParkingFloor;
 import parkinglot.src.ParkingSpots.ParkingSpot;
 import parkinglot.src.VehicleFactoryPattern.Vehicle;
 import parkinglot.src.VehicleFactoryPattern.VehicleFactory;
+import parkinglot.src.builder.ParkingLotBuilder;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class ParkingLotTest {
 
@@ -24,10 +23,11 @@ public class ParkingLotTest {
 
     @BeforeEach
     public void setUp() {
-        ParkingSpot carSpot = new CarParkingSpot(1, "Car");
-        ParkingSpot bikeSpot = new BikeParkingSpot(2, "Bike");
-        List<ParkingSpot> spots = Arrays.asList(carSpot, bikeSpot);
-        parkingLot = new ParkingLot(spots);
+        // Build a parking lot with 2 floors
+        ParkingLotBuilder builder = new ParkingLotBuilder();
+        builder.createFloor(1, 1, 1);
+        builder.createFloor(2, 1, 1);
+        parkingLot = builder.build();
 
         car = VehicleFactory.createVehicle("Car", "CAR123", new BasicHourlyRateStrategy());
         bike = VehicleFactory.createVehicle("Bike", "BIKE123", new PremiumRateStrategy());
@@ -35,32 +35,43 @@ public class ParkingLotTest {
 
     @Test
     public void testParkVehicleSuccess() {
-        ParkingSpot spot = parkingLot.parkVehicle(car);
-        assertNotNull(spot);
-        assertTrue(spot.isOccupied());
-        assertEquals(car, spot.getVehicle());
+        ParkingSpot carSpot = parkingLot.parkVehicle(car);
+        assertNotNull(carSpot);
+        assertTrue(carSpot.isOccupied());
+        assertEquals(car, carSpot.getVehicle());
+
+        ParkingSpot bikeSpot = parkingLot.parkVehicle(bike);
+        assertNotNull(bikeSpot);
+        assertTrue(bikeSpot.isOccupied());
+        assertEquals(bike, bikeSpot.getVehicle());
     }
 
     @Test
     public void testVacateVehicle() {
-        ParkingSpot spot = parkingLot.parkVehicle(car);
-        parkingLot.vacateSpot(spot, car);
-        assertFalse(spot.isOccupied());
+        ParkingSpot carSpot = parkingLot.parkVehicle(car);
+        assertNotNull(carSpot);
+        parkingLot.vacateSpot(carSpot, car);
+        assertFalse(carSpot.isOccupied());
+        assertNull(carSpot.getVehicle());
     }
 
     @Test
-    public void testGetSpotByNumber() {
-        ParkingSpot spot = parkingLot.getSpotByNumber(1);
-        assertNotNull(spot);
-        assertEquals(1, spot.getSpotNumber());
+    public void testGetSpotByNumberFromFloors() {
+        List<ParkingFloor> floors = parkingLot.getFloors();
+        ParkingFloor firstFloor = floors.get(0);
+        ParkingSpot targetSpot = firstFloor.getParkingSpots().get(0);
+
+        ParkingSpot retrievedSpot = parkingLot.findAvailableSpot(targetSpot.getSpotType());
+        assertEquals(targetSpot, retrievedSpot);
     }
 
     @Test
     public void testNoSpotAvailable() {
-        parkingLot.parkVehicle(car);
-        parkingLot.parkVehicle(VehicleFactory.createVehicle("Car", "CAR456", new BasicHourlyRateStrategy()));
-        ParkingSpot spot = parkingLot.parkVehicle(car); // No spot left
-        assertNull(spot);
+        // Fill all car spots
+        parkingLot.parkVehicle(VehicleFactory.createVehicle("Car", "C1", new BasicHourlyRateStrategy()));
+        parkingLot.parkVehicle(VehicleFactory.createVehicle("Car", "C2", new BasicHourlyRateStrategy()));
+        // This third car should not find a spot
+        ParkingSpot noSpot = parkingLot.parkVehicle(car);
+        assertNull(noSpot);
     }
 }
-
